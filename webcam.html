@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Webcam</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="webcam.css">
+</head>
+<body>
+    <div class="header">
+        <h2>Human Computer Interaction Webcam</h2>
+    </div>
+    <video id="webcam"></video>
+    <button class="button" onclick="toggle_cam()">Turn on</button>
+    <h1 id="webcamoff"></h1>
+    <a href="profile.html" class="button">EXIT</a>
+
+    <script>
+        var isCameraOn = false;
+
+        function toggle_cam() {
+            if (!isCameraOn) {
+                turnOnCamera();
+            } else {
+                turnOffCamera();
+            }
+        }
+
+        function turnOnCamera() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+                    var webcam = document.getElementById('webcam');
+                    webcam.srcObject = stream;
+                    webcam.play();
+                    isCameraOn = true;
+                    document.querySelector('.button').innerHTML = 'Turn off'; // Change button text to "Turn off"
+                    var msg = "Your cam is already on!";
+                    document.getElementById('webcamoff').innerHTML = msg; // Change message to "Your cam is already on!"
+                });
+            }
+        }
+
+        function turnOffCamera() {
+            if (confirm("Are you sure you want to turn it off?")) {
+                var stream = document.getElementById('webcam').srcObject;
+                stream.getTracks().forEach(function(track) {
+                    track.stop();
+                });
+                document.getElementById('webcam').srcObject = null;
+                var msg = "Your cam is already off!";
+                document.getElementById('webcamoff').innerHTML = msg; // Change message to "Your cam is already off!"
+                isCameraOn = false;
+                document.querySelector('.button').innerHTML = 'Turn on'; // Change button text to "Turn on"
+            }
+        }
+    </script>
+</body>
+</html>
